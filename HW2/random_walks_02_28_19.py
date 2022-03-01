@@ -1,3 +1,4 @@
+from xxlimited import new
 import matplotlib.pyplot as plt
 import math
 import numpy as np
@@ -18,11 +19,14 @@ class random_walks_python():
         w_array = [0.0, 0.5,
                    1.0]  # w is the weighting given to the directional bias (and hence (1-w) is the weighting given to correlated motion)
         ratio_theta_s_brw_crw = 1
+        new_ratio_theta_s_brw_crw = round(math.pi / 3, 4) / round(math.pi / 30, 4)
         plot_walks = 1
         count = 0
 
+
+        w_sweep = np.arange(0, 1, 0.01)
         efficiency_array = np.zeros([len(theta_s_array), len(w_array)])
-        new_efficiency_array = [[],[],[]]
+        new_efficiency_array = np.zeros(len(w_sweep))
         #print(efficiency_array)
         w_1 = [[], [], []]
         w_half = [[], [], []]
@@ -30,63 +34,55 @@ class random_walks_python():
         #each w array will hold the mean navigational efficiency for different angle
         arrays = [w_0, w_half, w_1]
         total_distance_moved = 0
-        # for w_i in range(len(w_array)):
-        #     w = w_array[w_i] #pure biased walk, pure correlated walk, both
-        #     for theta_s_i in range(len(theta_s_array)):
-        #         #run time step sim here?
-        #         theta_s_crw = np.multiply(ratio_theta_s_brw_crw, theta_s_array[theta_s_i])
-        #         #print(theta_s_crw)
-        #         theta_s_brw = theta_s_array[theta_s_i]
-        #         x, y, arr = self.BCRW(N, realizations, v, theta_s_crw, theta_s_brw, w)
-        #         print(arr)
-        #         if plot_walks == 1:
-        #             count += 1
-        #             plt.figure(count)
-        #             plt.plot(x.T, y.T)
-        #             plt.axis('equal')
-        #         #pi = pi/24,, pi/12, pi/3 for each w = 0,0.5,1
-                
-                
-        #         #this is the final navigational efficientcy
-        #         efficiency_array[theta_s_i, w_i] = np.divide(np.mean(x[:, -1] - x[:, 0]), (v * N))
-
-        #         #efficiency_array_plot[theta_s_i, w_i] = np.divide(np.mean(x[:, -1] - x[:, 0]), (v * N))
-        #         #print(efficiency_array)
-        #         #print(f"Navigational efficiency at {theta_s_array[theta_s_i]} for w={w} is: {efficiency_array[theta_s_i, w_i]}")
-        #         arrays[w_i][theta_s_i] = arr
-
-        #paet 2        
         for w_i in range(len(w_array)):
             w = w_array[w_i] #pure biased walk, pure correlated walk, both
-            #run time step sim here?
-            new_ratio_theta_s_brw_crw = round(math.pi / 3, 4)/ round(math.pi / 3, 4)
-            theta_s_crw = np.multiply(new_ratio_theta_s_brw_crw, round(math.pi / 3, 4))
-            #print(theta_s_crw)
-            theta_s_brw = round(math.pi / 3, 4)
-            x, y, arr = self.BCRW(N, realizations, v, theta_s_crw, theta_s_brw, w)
-            #print(arr)
-            if plot_walks == 1:
-                count += 1
-                plt.figure(count)
-                plt.plot(x.T, y.T)
-                plt.axis('equal')
-            #pi = pi/24,, pi/12, pi/3 for each w = 0,0.5,1
-            
-            
-            #this is the final navigational efficientcy
-            new_efficiency_array[w_i] = np.divide(np.mean(x[:, -1] - x[:, 0]), (v * N))
+            for theta_s_i in range(len(theta_s_array)):
+                #run time step sim here?
+                theta_s_crw = np.multiply(ratio_theta_s_brw_crw, theta_s_array[theta_s_i])
+                #print(theta_s_crw)
+                theta_s_brw = theta_s_array[theta_s_i]
+                x, y, arr = self.BCRW(N, realizations, v, theta_s_crw, theta_s_brw, w)
+       
+                if plot_walks == 1:
+                    count += 1
+                    plt.figure(count)
+                    plt.plot(x.T, y.T)
+                    plt.axis('equal')
+                #pi = pi/24,, pi/12, pi/3 for each w = 0,0.5,1
+                
+                
+                #this is the final navigational efficientcy
+                efficiency_array[theta_s_i, w_i] = np.divide(np.mean(x[:, -1] - x[:, 0]), (v * N))
 
-            #efficiency_array_plot[theta_s_i, w_i] = np.divide(np.mean(x[:, -1] - x[:, 0]), (v * N))
-            #print(efficiency_array)
-            #print(f"Navigational efficiency at {theta_s_array[theta_s_i]} for w={w} is: {efficiency_array[theta_s_i, w_i]}")
-        
+                #print(efficiency_array)
+                #print(f"Navigational efficiency at {theta_s_array[theta_s_i]} for w={w} is: {efficiency_array[theta_s_i, w_i]}")
+                arrays[w_i][theta_s_i] = arr
+
+        #part 2        
+        # If θCRW = π/30, and θBRW = π/3, what is the value of w associated with the highest navigational efficiency?
+        for w_i in range(len(w_sweep)):
+            w = w_sweep[w_i] #pure biased walk, pure correlated walk, both
+            #run time step sim here?
             
-            # plt.show()
+            theta_s_crw = np.multiply(new_ratio_theta_s_brw_crw, round(math.pi / 30, 4))
+            #print(theta_s_crw)
+            theta_s_brw = round(math.pi / 30, 4)
+            x, y, arr = self.BCRW(N, realizations, v, theta_s_brw, theta_s_crw, w)
+
+            #this is the final navigational efficientcy
+           
+            new_efficiency_array[w_i] = np.divide(np.mean(x[:, -1] - x[:, 0]), (v * N))
+        new_efficiency_array.flatten()
+
+        print(f"Max Navigational efficiency is {new_efficiency_array.max()} at w = {w_sweep[ np.where(new_efficiency_array == new_efficiency_array.max())]}")
+        plt.figure()
+        plt.plot(w_sweep, new_efficiency_array)
+
         #print(efficiency_array)
         plt.figure()
         legend_array = []
         w_array_i = np.repeat(w_array, len(efficiency_array))
-        print(f"Efficiency: {new_efficiency_array}")
+        print(f"Efficiency (w=0, w=0.5, w=1): {new_efficiency_array}")
         #w = 0
         plt.title('w = 0')
         plt.xlabel("Timestep")
