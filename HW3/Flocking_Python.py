@@ -210,7 +210,6 @@ class flock():
    
 
             fig.canvas.draw()
-            fig.canvas.start_event_loop(interval)
     
 
     #def update(p, v, r):
