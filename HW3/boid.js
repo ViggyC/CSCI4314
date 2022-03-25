@@ -7,7 +7,8 @@ class Boid{
         this.acceleration = createVector();
         this.maxForce = 1;
         this.maxSpeed =4;
-        this.randomVelocity = 0.01
+        //this.randomVelocity = 0.01
+        this.r = 1.2;
         this.obstacle = new Obstacle();
     }
 
@@ -28,7 +29,7 @@ class Boid{
     }
 
     align(boids){
-        let radius =100;
+        let radius =50;
 
         let avg = createVector();
         let total = 0;
@@ -57,7 +58,7 @@ class Boid{
     }
 
     cohesion(boids){
-        let radius =100;
+        let radius =50;
 
         let avg = createVector();
         let total = 0;
@@ -86,8 +87,8 @@ class Boid{
     }
 
     repulsion(boids){
-        let radius =100;
-        let rad_obstacle = 100;
+        let radius =50;
+        let rad_obstacle = 80;
 
         let avg = createVector();
         let total = 0;
@@ -129,7 +130,10 @@ class Boid{
                     diff.div(dObstacle);
                     avg.add(diff); //adding up all velocities
                     total++;
+             
                 }
+
+       
 
                 
         }
@@ -145,18 +149,18 @@ class Boid{
         let alignment = this.align(boids); //c3
         let cohesion = this.cohesion(boids); //c1
         let repulsion = this.repulsion(boids); //c2
-        let random = this.randomVelocity; //c4
+        //let r = createVector(); //c4
 
         repulsion.mult(repuslionSlider.value());
         cohesion.mult(cohesionSlider.value());
         alignment.mult(alignSlider.value());
-        //random.mult(randomSlider.value());
+        //r.mult(randomSlider.value());
 
 
         this.acceleration.add(repulsion);
         this.acceleration.add(alignment);
         this.acceleration.add(cohesion);
-        //this.acceleration.add(random);
+        //this.acceleration.add(r);
     }
 
 
@@ -167,11 +171,22 @@ class Boid{
         this.acceleration.mult(0);
     }
 
+ 
 
     show(){
         strokeWeight(8);
         stroke(255);
-        point(this.position.x, this.position.y);
+        let theta = this.velocity.heading() + radians(90);
+        push();
+        translate(this.position.x, this.position.y);
+        rotate(theta);
+        beginShape();
+        vertex(0, -this.r * 2);
+        vertex(-this.r, this.r * 2);
+        vertex(this.r, this.r * 2);
+        endShape(CLOSE);
+        pop();
+        //point(this.position.x, this.position.y);
     }
 
 }

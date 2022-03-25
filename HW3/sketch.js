@@ -4,12 +4,12 @@ const object = [];
 let alignSlider, cohesionSlider, repuslionSlider, randomSlider;
 
 function setup(){
-    createCanvas(640,640);
+    createCanvas(800,640);
     
-    cohesionSlider = createSlider(0,5,1,0.1);
-    repuslionSlider = createSlider(0,5,1,0.1);
-    alignSlider = createSlider(0,5,1,0.1);
-    randomSlider = createSlider(0,5,1,0.1);
+    cohesionSlider = createSlider(0,5,1,0.01);
+    repuslionSlider = createSlider(0,5,1,0.01);
+    alignSlider = createSlider(0,5,1,0.01);
+    randomSlider = createSlider(0,5,1,0.01);
 
     for (let i=0; i<1; i++){
         object.push(new Obstacle());
@@ -48,6 +48,6 @@ function draw(){
     valueDisplayer.html('Attraction(c1)'+cohesionSlider.value())
     valueDisplayer1.html('Repulsion(c2)'+repuslionSlider.value())
     valueDisplayer2.html('Align(c3)'+alignSlider.value())
-    valueDisplayer3.html('Random(c4)'+alignSlider.value())
+    valueDisplayer3.html('Random(c4)'+randomSlider.value())
   
 }
