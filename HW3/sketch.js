@@ -11,9 +11,9 @@ function setup(){
     alignSlider = createSlider(0,5,1,0.01);
     randomSlider = createSlider(0,5,1,0.01);
 
-    for (let i=0; i<1; i++){
-        object.push(new Obstacle());
-    }
+
+    object.push(new Obstacle(800/2, 600/2));
+ 
     for (let i=0; i<400; i++){
         flock.push(new Boid());
     }
@@ -44,6 +44,7 @@ function draw(){
     }
     for (let o of object){
         o.show();
+        o.move();
     }
     valueDisplayer.html('Attraction(c1)'+cohesionSlider.value())
     valueDisplayer1.html('Repulsion(c2)'+repuslionSlider.value())
